@@ -1,5 +1,21 @@
 <ion-view view-title="Cupones Disponibles">
   <ion-content>
-    <h1>Mis Cupones</h1>
+    <div ng-controller="PromoController">
+      <div class="list">
+
+        <a class="item item-thumbnail-left" href="#"
+           ng-repeat="promocion in promociones" ng-click="getPromocion(promocion)">
+          <img src="{{promocion.imagenesUrls[0]}}">
+          <h2>{{promocion.titulo}}</h2>
+          <p>
+            {{promocion.descripcionCorta }}
+          </p>
+          <b>De:</b> <span style="font-size: 12px;text-decoration: line-through">{{promocion.precioRegular | currency}} </span> <b>a</b>
+          <span style="color: #204d74">{{promocion.precioDescuento | currency}}</span><br/>
+          <b>Kupon: </b><span style="color: #204d74"> {{promocion.precioKupon | currency}} </span>
+        </a>
+
+      </div>
+    </div>
   </ion-content>
 </ion-view>

@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','validation.match'])
+angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'kupon.dao'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $db) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -18,11 +18,10 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match'])
       StatusBar.styleDefault();
     }
   });
-
+  $db.init();
 })
 
-.controller( "LoginController",
-function( $scope ){
+.controller( "LoginController", function( $scope, $rootScope, $http, $db ){
   $scope.isLogin = true;
 
   $scope.switch = function(){
@@ -30,13 +29,35 @@ function( $scope ){
     $scope.isLogin = !$scope.isLogin;
   }
 
-  $scope.registrar = function(){
-    window.location.href="inicio.html";
+  $scope.login = function(){
+    $http.post( LOGIN_WS, $scope.user).then(function(result){
+      console.log("result login ...", result.data);
+      if(result.data.status === "OK"){
+        localStorage["user"] = JSON.stringify(result.data.user);
+        window.location.href="inicio.html";
+      }else{
+        $scope.errorLogin = "El usuario y/o contraseña son incorrectos";
+        console.log("Error en login ");
+      }
+    },function(err){
+      console.error("Error al hacer login ...", err)
+    });
   }
 
-  $scope.login = function(){
-    window.location.href="inicio.html";
+  $scope.registrar = function(){
+    console.log("Usuario que se va a registrar :: ", $scope.user);
+    $scope.user.status = 1;
+    $http.post( REGISTRO_WS, $scope.user ).then(function(result) {
+      console.log("Exito al registrar nuevo usuario :: ", result.data)
+      $db.db.insert( result.data).then(function(resultDB){
+        console.log("User DAO inserted en touchDB ... ", resultDB );
+        window.location.href="inicio.html";
+      });
+    }, function(error){
+      console.error("Error al registrar nuevo usuario: ", error)
+    });
   }
+
 
 })
 

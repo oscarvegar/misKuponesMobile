@@ -4,3 +4,16 @@
 .error{
     color: darkred;
 }
+.tenue{
+    font-size: 11px;
+    color: #898989;
+}
+
+.textCancel{
+    text-decoration: line-through;
+}
+
+.resaltar{
+    font-size: 14px;
+    color: #204d74;
+}

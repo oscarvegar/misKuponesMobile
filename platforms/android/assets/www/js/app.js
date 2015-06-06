@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.business', 'PromoModule'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $kuponServices, $db, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -18,6 +18,13 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       StatusBar.styleDefault();
     }
   });
+  $db.init();
+  console.log("Cargando las promociones del servidor ...");
+  $kuponServices.initApp().then(function(result){
+    console.log("promociones creadas :: ", result);
+    $rootScope.promociones = result.data;
+  });
+
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -30,20 +37,20 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     controller: 'AppCtrl'
   })
 
-  .state('app.search', {
-    url: "/search",
+  .state('app.detalle', {
+    url: "/detalle",
     views: {
       'menuContent': {
-        templateUrl: "templates/search.html"
+        templateUrl: "templates/detalle.html"
       }
     }
   })
 
-  .state('app.browse', {
-    url: "/browse",
+  .state('app.compra', {
+    url: "/compra",
     views: {
       'menuContent': {
-        templateUrl: "templates/browse.html"
+        templateUrl: "templates/compra.html"
       }
     }
   })
