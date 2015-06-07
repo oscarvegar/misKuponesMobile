@@ -9,7 +9,7 @@ var CONTEXT_PATH_WS = "http://miskupones.com/";
 //var CONTEXT_PATH_WS = "http://localhost:1337/";
 
 // GENERAL
-var REGISTRO_WS = CONTEXT_PATH_WS + "newUser/";
+var REGISTRO_WS = CONTEXT_PATH_WS + "auth/local/register/";
 var LOGIN_WS = CONTEXT_PATH_WS + "loginapp/";
 var GET_PROMOS_WS = CONTEXT_PATH_WS + "Promocion/findByLimit/";
 var VENTA_WS = CONTEXT_PATH_WS + "Venta/generaVenta/";
