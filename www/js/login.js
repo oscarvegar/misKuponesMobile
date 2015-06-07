@@ -21,26 +21,19 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
   $db.init();
 })
 
-.controller( "LoginController", function( $scope, $rootScope, $http, $db ){
+.controller( "LoginController", function( $scope, $rootScope, $http, $db){
   $scope.isLogin = true;
-
   $scope.switch = function(){
     $scope.user = null;
     $scope.isLogin = !$scope.isLogin;
   }
 
   $scope.login = function(){
-    $http.post( LOGIN_WS, $scope.user).then(function(result){
-      console.log("result login ...", result.data);
-      if(result.data.status === "OK"){
-        localStorage["user"] = JSON.stringify(result.data.user);
+    $http.post(LOGIN_WS, $scope.user).success(function(result,status){
+        localStorage["user"] = JSON.stringify(result);
         window.location.href="inicio.html";
-      }else{
-        $scope.errorLogin = "El usuario y/o contraseña son incorrectos";
-        console.log("Error en login ");
-      }
-    },function(err){
-      console.error("Error al hacer login ...", err)
+    }).error(function(err){
+      $scope.errorLogin = "El usuario y/o contraseña son incorrectos";
     });
   }
 
