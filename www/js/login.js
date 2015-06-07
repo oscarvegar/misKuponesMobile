@@ -29,7 +29,9 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
   }
 
   $scope.login = function(){
-    $http.post(LOGIN_WS, $scope.user).success(function(result,status){
+    $http.post(LOGIN_WS, $scope.user)
+    .success(function(result,status){
+        console.log(status)
         localStorage["user"] = JSON.stringify(result);
         window.location.href="inicio.html";
     }).error(function(err){
