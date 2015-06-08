@@ -57,9 +57,11 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     });
     console.log("Usuario que se va a registrar :: ", $scope.user);
     $scope.user.status = 1;
+    $scope.user.wreck = '(#$%)';
     $http.post( REGISTRO_WS, $scope.user ).then(function(result) {
       console.log("Exito al registrar nuevo usuario :: ", result.data)
-      $db.db.insert( result.data).then(function(resultDB){
+      $db.insert( result.data)
+      .then(function(resultDB){
         console.log("User DAO inserted en touchDB ... ", resultDB );
         $ionicLoading.hide();
         window.location.href="inicio.html";
