@@ -19,10 +19,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
     }
   });
   $db.init();
-  console.log("Cargando las promociones del servidor ...");
-  $kuponServices.initApp().then(function(result){
-    console.log("promociones creadas :: ", result);
-    $rootScope.promociones = result.data;
+  $kuponServices.getPromociones().then(function(result){
+    console.log("Promociones encontradas :: ", result);
+    $rootScope.promociones = result.promociones;
+  },function(error){
+    alert("Error al cargar promociones: " + JSON.stringify(error) );
   });
 
 })
@@ -76,4 +77,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/cupones');
 
+})
+.controller("AppController", function($scope, $http){
+  $scope.salir = function(){
+    ionic.Platform.exitApp();
+  }
 });
