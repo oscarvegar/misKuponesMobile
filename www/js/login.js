@@ -51,7 +51,7 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     });
   }
 
-  $scope.registrar = function(){
+  $scope.registrar = function(){ 
     $ionicLoading.show({
       template: ' Registrando nuevo usuario ...'
     });
