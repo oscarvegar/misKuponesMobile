@@ -43,6 +43,7 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
             $ionicLoading.hide();
             window.location.href="inicio.html";
           },function(error){
+            $ionicLoading.hide();
             alert("Error al cargar promociones: " + JSON.stringify(error) );
           });
     }).error(function(err){
