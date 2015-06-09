@@ -4,7 +4,7 @@
 
 //  Produccion
 var CONTEXT_PATH_WS = "http://miskupones.com/";
-
+ 
 //  Desarrollo
 //var CONTEXT_PATH_WS = "http://localhost:1337/";
 

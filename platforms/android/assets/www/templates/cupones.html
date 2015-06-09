@@ -4,7 +4,7 @@
       <div class="list">
 
         <a class="item item-thumbnail-left" href="#"
-           ng-repeat="promocion in promociones" ng-click="getPromocion(promocion)">
+           ng-repeat="promocion in promociones" ng-click="getPromocion(promocion, $index)">
           <img src="{{promocion.imagenesUrls[0]}}">
           <h2>{{promocion.titulo}}</h2>
           <p>

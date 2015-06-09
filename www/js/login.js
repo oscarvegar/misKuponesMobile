@@ -61,14 +61,19 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     $scope.user.wreck = '(#$%)';
     $http.post( REGISTRO_WS, $scope.user ).then(function(result) {
       console.log("Exito al registrar nuevo usuario :: ", result.data)
-      $db.insert( result.data)
-      .then(function(resultDB){
-        console.log("User DAO inserted en touchDB ... ", resultDB );
+      $kuponServices.registraUsuario( result.data ).then( function(resultUser){
+        $kuponServices.initApp().then(function(resultPromo){
+          console.log("promociones creadas :: ", resultPromo);
+          $rootScope.promociones = resultPromo.data;
+          $ionicLoading.hide();
+          window.location.href="inicio.html";
+        },function(error){
+          $ionicLoading.hide();
+          alert("Error al cargar promociones: " + JSON.stringify(error) );
+        });
+      },function(error){
         $ionicLoading.hide();
-        window.location.href="inicio.html";
-      },function(err){
-        $ionicLoading.hide();
-        alert("Error a cargar datos ... " + JSON.stringify(err));
+        alert("Error al registrar usuario: " + JSON.stringify(error) );
       });
     }, function(error){
       $ionicLoading.hide();
