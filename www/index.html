@@ -30,19 +30,20 @@
   <body ng-app="starter">
     <div class="container" ng-controller="LoginController">
 
-      <div class="bar bar-subheader" align="center">
-        <img src="img/miskupones.png" style="width: 90%;">
+      <div class="row text-center" ng-show="isLogin" >
+        <div class="col-md-12 text-center">
+          <img src="img/miskupones.png" >
+          </div>
       </div>
 
-      <br/><br/><br/><br/>
-
-      <div id="loginbox" style="margin-top:50px;" ng-show="isLogin" >
+      <div id="loginbox" style="margin-top:10px;" ng-show="isLogin" >
         <div class="panel panel-info" style="border: none" >
           <div class="panel-heading">
             <div class="panel-title">Iniciar sesión</div>
           </div>
           <form id="loginform" name="loginForm" role="form" ng-submit="login()">
             <div class="list" >
+
               <div ng-show="errorLogin" id="login-alert"
                    class="alert alert-danger col-sm-12">
                 <i class="icon ion-sad"></i>
@@ -96,9 +97,10 @@
           <div class="panel-body" >
             <form id="signupform" name="form" class="form-horizontal" role="form" ng-submit="registrar()">
 
-              <div id="signupalert" style="display:none" class="alert alert-danger">
-                <p>Error:</p>
-                <span></span>
+              <div ng-show="errorRegistro" id="login-alert-registro"
+                   class="alert alert-danger col-sm-12">
+                <i class="icon ion-sad"></i>
+                {{errorRegistro}}
               </div>
 
               <div class="form-group">

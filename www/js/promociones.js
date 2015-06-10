@@ -12,6 +12,48 @@ myApp.controller( "PromoController", function($scope, $http, $rootScope, $kuponS
     window.location.href = "#/app/detalle";
   }
 
+  $scope.buscarPorNombre = function(){
+      if ( $scope.criteria.length >= 3 ) {
+          $kuponServices.getPromosPorTitulo( $scope.criteria ).then(function(resultPromo) {
+              console.log("actualizando promociones :: ", resultPromo);
+              $rootScope.promociones = resultPromo;
+              if(!$scope.$$phase) {
+                  $scope.$apply()
+              }
+          },function(error){
+              alert("Error al cargar promociones: " + JSON.stringify(error) );
+          });
+      } else if( $scope.criteria === "" ) {
+          $kuponServices.getPromosPorTitulo( "*" ).then(function(resultPromo) {
+              $rootScope.promociones = resultPromo;
+              console.log("actualizando promociones :: ", $rootScope.promociones );
+              if(!$scope.$$phase) {
+                  $scope.$apply()
+              }
+          },function(error){
+              alert("Error al cargar promociones: " + JSON.stringify(error) );
+          });
+      }
+  }
+
+  $scope.actualizarLista = function(){
+      $kuponServices.initApp().then(function(resultPromo) {
+          console.log("actualizando promociones :: ", resultPromo);
+          $rootScope.promociones = resultPromo.data;
+          $scope.$broadcast('scroll.refreshComplete');
+          if(!$scope.$$phase) {
+              $scope.$apply()
+          }
+      },function(error){
+          $ionicLoading.hide();
+          $scope.$broadcast('scroll.refreshComplete');
+          if(!$scope.$$phase) {
+              $scope.$apply()
+          }
+          alert("Error al cargar promociones: " + JSON.stringify(error) );
+      });
+  }
+
   $scope.comprar = function() {
     window.location.href = "#/app/compra";
     $rootScope.cantidad = 1;

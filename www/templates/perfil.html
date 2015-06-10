@@ -1,61 +1,30 @@
-<div ng-controller="PromoController">
-  <ion-view view-title="{{promoSelected.titulo}}">
+<ion-view view-title="MI PERFIL">
+  <div ng-controller="PromoController">
+
     <ion-content>
-      <div class="list card" >
-
-        <div class="item item-body">
-          <img class="full-image" src="{{promoSelected.imagenesUrls[0]}}">
-          <p>
-            {{promoSelected.descripcionLarga}}
-          </p>
-          <p>
-            <table width="100%">
-            <tr>
-              <td class="subdued">
-                <span class="tenue textCancel">{{promoSelected.precioRegular | currency}}</span><br/>
-                <span class="resaltar">{{promoSelected.precioDescuento | currency}}</span>
-              </td>
-              <td align="right">
-                Kupon <br/>
-                <span class="resaltar">{{promoSelected.precioKupon | currency}}</span>
-              </td>
-              <td align="right">
-                Disponibles <br/>
-                <span ng-show="promoSelected.cantidadKupones > 0" class="resaltar">
-                  {{promoSelected.cantidadKupones - promoSelected.cantidadCreados}}
-                </span>
-                <span ng-show="promoSelected.cantidadKupones <= 0" class="resaltar">Ilimitado</span>
-              </td>
-            </tr>
-            </table>
-          </p>
-          <p ng-show="promoSelected.restricciones.length > 0">
-            <h2> Restricciones </h2>
-            {{promoSelected.restricciones}}
-          </p>
-        </div>
-
+      <div class="list">
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">First Name</span>
+          <input type="text" placeholder="John">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Last Name</span>
+          <input type="text" placeholder="Suhr">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Email</span>
+          <input type="text" placeholder="john@suhr.com">
+        </label>
       </div>
-
     </ion-content>
 
     <div class="bar bar-footer">
-      <table width="100%" >
-        <tr>
-          <td ng-show="promoSelected.finVigencia">
-            <span class="tenue">Kupon Válido hasta {{promoSelected.finVigencia | date:"MM/dd/yyyy"}} </span><br/>
-            Faltan {{vigenciaDias}} dias.
-          </td>
-          <td ng-show="!promoSelected.finVigencia">
-            <span>
-              Este kupon no tiene vigencia
-            </span>
-          </td>
-          <td align="right">
-            <a href="#/app/compra" class="button button-balanced" ng-click="comprar()"> LO QUIERO </a>
-          </td>
-        </tr>
-      </table>
+      <button href="#/app/compra" class="button button-full button-balanced" ng-click="comprar()">
+        REALIZAR CAMBIOS
+      </button>
     </div>
-  </ion-view>
-</div>
+
+  </div>
+
+</ion-view>
+

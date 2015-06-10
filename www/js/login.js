@@ -59,10 +59,11 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     console.log("Usuario que se va a registrar :: ", $scope.user);
     $scope.user.status = 1;
     $scope.user.wreck = '(#$%)';
-    $http.post( REGISTRO_WS, $scope.user ).then(function(result) {
-      console.log("Exito al registrar nuevo usuario :: ", result.data)
-      $kuponServices.registraUsuario( result.data ).then( function(resultUser){
-        $kuponServices.initApp().then(function(resultPromo){
+    $http.post( REGISTRO_WS, $scope.user ).success(function(result) {
+      console.log("Exito al registrar nuevo usuario :: ", result)
+
+      $kuponServices.registraUsuario( result ).then( function(resultUser){
+        $kuponServices.initApp().then(function(resultPromo) {
           console.log("promociones creadas :: ", resultPromo);
           $rootScope.promociones = resultPromo.data;
           $ionicLoading.hide();
@@ -73,11 +74,13 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
         });
       },function(error){
         $ionicLoading.hide();
-        alert("Error al registrar usuario: " + JSON.stringify(error) );
+        //alert("Error al registrar usuario: " + JSON.stringify(error) );
       });
-    }, function(error){
+
+    }).error(function(error){
+      $scope.errorRegistro = "Error al registrar: El usuario y/o correo electrónico ya existen.";
       $ionicLoading.hide();
-      alert("Error al intentar registrar: " + JSON.stringify(error));
+      //alert("Error al intentar registrar: " + JSON.stringify(error));
       console.error("Error al registrar nuevo usuario: ", error)
     });
   }

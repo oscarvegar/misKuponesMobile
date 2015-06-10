@@ -27,12 +27,12 @@ angular.module('kupon.business', [])
     this.registraUsuario = function( user ) {
         return $db.query( DOC_USER ).then(function(doc) {
             // El documento existe, lo borramos primero
+            console.log("user :::::: ", user);
             console.log("El documento del usuario existe :: ", doc);
-            console.log("El documento existe, lo actualizamos");
+            console.log("El documento existe, lo actualizamos en doc : " + DOC_USER );
             return $db.db.put({_id: DOC_USER, _rev: doc._rev, user: user })
                 .then(function(resultUpd){
-                    resultUpd.data = result.data;
-                    return resultUpd;
+                    return user;
                 });
         }, function(err) {
             if(err.status ===  404 ){
