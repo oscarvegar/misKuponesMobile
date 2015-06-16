@@ -4,6 +4,29 @@
 var myApp = angular.module("PromoModule",['ionic']);
 myApp.controller( "PromoController", function($scope, $http, $rootScope, $kuponServices, $db, $ionicLoading){
 
+  $rootScope.editar = false;
+
+  getCliente = function(){
+    $db.query( DOC_USER ).then( function( result ){
+        $rootScope.user = result.user;
+        $http.post(CLIENTE_WS, {id:result.user.id}).then(function( resultClient ){
+            console.log( "client :: ", resultClient.data );
+            $rootScope.cliente = resultClient.data;
+        });
+    });
+  };
+
+  getCliente();
+
+  $scope.updateCliente = function() {
+    $http.post( CLIENTE_UPDATE_WS, $rootScope.cliente ).then(function(result){
+        console.log("Cliente ::: ", result );
+        $rootScope.cliente = result.data;
+    }).catch(function(err){
+        alert("Error a actualizar el cliente ");
+    });
+  }
+
   $scope.getPromocion = function ( promo, index ) {
     console.log("promo :: ", promo);
     $rootScope.promoSelected = promo;

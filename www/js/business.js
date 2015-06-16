@@ -1,6 +1,8 @@
 angular.module('kupon.business', [])
 .service('$kuponServices', function( $q, $http, $db){
 
+
+
 	this.initApp = function( ) {
         return $http.post(GET_PROMOS_WS).then(function(result) {
             console.log("Data >>> ", result.data );
