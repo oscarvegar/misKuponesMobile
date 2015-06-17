@@ -33,6 +33,11 @@
             <h2> Restricciones </h2>
             {{promoSelected.restricciones}}
           </p>
+          <p>
+            <h2>Compartir</h2>
+            <a href="javascript:;" ng-click="shareViaFacebook(promoSelected)"><img src="img/fbicon.png" class="icon"></a>
+          </p>
+          <br>
         </div>
 
       </div>
@@ -42,13 +47,13 @@
     <div class="bar bar-footer">
       <table width="100%" >
         <tr>
-          <td ng-show="promoSelected.finVigencia">
+          <td ng-if="promoSelected.finVigencia">
             <span class="tenue">Kupon Válido hasta {{promoSelected.finVigencia | date:"MM/dd/yyyy"}} </span><br/>
             Faltan {{vigenciaDias}} dias.
           </td>
-          <td ng-show="!promoSelected.finVigencia">
+          <td ng-if="!promoSelected.finVigencia">
             <span>
-              Este kupon no tiene vigencia
+              Este kupon no tiene vigencia.
             </span>
           </td>
           <td align="right">

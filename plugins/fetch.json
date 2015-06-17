@@ -4,5 +4,12 @@
             "type": "registry",
             "id": "com.ionic.keyboard"
         }
+    },
+    "nl.x-services.plugins.socialsharing": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
+            "subdir": "."
+        }
     }
 }

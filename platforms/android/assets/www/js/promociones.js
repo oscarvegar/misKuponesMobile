@@ -1,8 +1,31 @@
 /**
  * Created by oscar on 02/04/15.
  */
-var myApp = angular.module("PromoModule",['ionic']);
-myApp.controller( "PromoController", function($scope, $http, $rootScope, $kuponServices, $db, $ionicLoading){
+var myApp = angular.module("PromoModule",['ionic','ngCordova']);
+myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope, $kuponServices, $db, $ionicLoading,$cordovaSocialSharing){
+
+  $rootScope.editar = false;
+
+  getCliente = function(){
+    $db.query( DOC_USER ).then( function( result ){
+        $rootScope.user = result.user;
+        $http.post(CLIENTE_WS, {id:result.user.id}).then(function( resultClient ){
+            console.log( "client :: ", resultClient.data );
+            $rootScope.cliente = resultClient.data;
+        });
+    });
+  };
+
+  getCliente();
+
+  $scope.updateCliente = function() {
+    $http.post( CLIENTE_UPDATE_WS, $rootScope.cliente ).then(function(result){
+        console.log("Cliente ::: ", result );
+        $rootScope.cliente = result.data;
+    }).catch(function(err){
+        alert("Error a actualizar el cliente ");
+    });
+  }
 
   $scope.getPromocion = function ( promo, index ) {
     console.log("promo :: ", promo);
@@ -10,6 +33,48 @@ myApp.controller( "PromoController", function($scope, $http, $rootScope, $kuponS
     $rootScope.indexPromoSelected = index;
     $rootScope.decuentoPorcentaje = 100 - (( promo.precioDescuento * 100 ) / promo.precioRegular);
     window.location.href = "#/app/detalle";
+  }
+
+  $scope.buscarPorNombre = function(){
+      if ( $scope.criteria.length >= 3 ) {
+          $kuponServices.getPromosPorTitulo( $scope.criteria ).then(function(resultPromo) {
+              console.log("actualizando promociones :: ", resultPromo);
+              $rootScope.promociones = resultPromo;
+              if(!$scope.$$phase) {
+                  $scope.$apply()
+              }
+          },function(error){
+              alert("Error al cargar promociones: " + JSON.stringify(error) );
+          });
+      } else if( $scope.criteria === "" ) {
+          $kuponServices.getPromosPorTitulo( "*" ).then(function(resultPromo) {
+              $rootScope.promociones = resultPromo;
+              console.log("actualizando promociones :: ", $rootScope.promociones );
+              if(!$scope.$$phase) {
+                  $scope.$apply()
+              }
+          },function(error){
+              alert("Error al cargar promociones: " + JSON.stringify(error) );
+          });
+      }
+  }
+
+  $scope.actualizarLista = function(){
+      $kuponServices.initApp().then(function(resultPromo) {
+          console.log("actualizando promociones :: ", resultPromo);
+          $rootScope.promociones = resultPromo.data;
+          $scope.$broadcast('scroll.refreshComplete');
+          if(!$scope.$$phase) {
+              $scope.$apply()
+          }
+      },function(error){
+          $ionicLoading.hide();
+          $scope.$broadcast('scroll.refreshComplete');
+          if(!$scope.$$phase) {
+              $scope.$apply()
+          }
+          alert("Error al cargar promociones: " + JSON.stringify(error) );
+      });
   }
 
   $scope.comprar = function() {
@@ -51,6 +116,35 @@ myApp.controller( "PromoController", function($scope, $http, $rootScope, $kuponS
       alert("Error al generar la venta: " + JSON.stringify(error) );
     });
   }
+
+  $scope.shareViaFacebook = function(promo) {
+    console.log(promo)
+    try{
+      $ionicLoading.show({
+          template: "Compartiendo en facebook..."
+        });
+      $cordovaSocialSharing.shareViaFacebook(null, null, "http://miskupones.com/v/promocion/"+promo.promocionId)
+      .then(function(result) {
+        $ionicLoading.hide()
+    }, function(err) {
+        $ionicLoading.hide()
+        console.error("ERROR",err);
+        $ionicLoading.show({
+          template: err
+        });
+        $timeout($ionicLoading.hide,5000)
+    });;
+    }catch(err){
+      $ionicLoading.hide()
+      $ionicLoading.show({
+          template: err
+        });
+      $timeout($ionicLoading.hide,5000)
+
+    }
+      
+  }
+    
 
 
 });

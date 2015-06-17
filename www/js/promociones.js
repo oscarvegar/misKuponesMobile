@@ -1,8 +1,8 @@
 /**
  * Created by oscar on 02/04/15.
  */
-var myApp = angular.module("PromoModule",['ionic']);
-myApp.controller( "PromoController", function($scope, $http, $rootScope, $kuponServices, $db, $ionicLoading){
+var myApp = angular.module("PromoModule",['ionic','ngCordova']);
+myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope, $kuponServices, $db, $ionicLoading,$cordovaSocialSharing){
 
   $rootScope.editar = false;
 
@@ -116,6 +116,35 @@ myApp.controller( "PromoController", function($scope, $http, $rootScope, $kuponS
       alert("Error al generar la venta: " + JSON.stringify(error) );
     });
   }
+
+  $scope.shareViaFacebook = function(promo) {
+    console.log(promo)
+    try{
+      $ionicLoading.show({
+          template: "Compartiendo en facebook..."
+        });
+      $cordovaSocialSharing.shareViaFacebook(null, null, "http://miskupones.com/v/promocion/"+promo.promocionId)
+      .then(function(result) {
+        $ionicLoading.hide()
+    }, function(err) {
+        $ionicLoading.hide()
+        console.error("ERROR",err);
+        $ionicLoading.show({
+          template: err
+        });
+        $timeout($ionicLoading.hide,5000)
+    });;
+    }catch(err){
+      $ionicLoading.hide()
+      $ionicLoading.show({
+          template: err
+        });
+      $timeout($ionicLoading.hide,5000)
+
+    }
+      
+  }
+    
 
 
 });

@@ -16,6 +16,8 @@
     <script src="lib/ionic/js/angular/angular-input-match.js"></script>
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="lib/ng-cordova.js"></script>
 
     <!-- Services -->
     <script src="js/servicesDAO.js"></script>
@@ -137,7 +139,7 @@
                 <label for="password" class="col-md-3 control-label">Contraseña</label>
                 <div class="col-md-9">
                   <input type="password" class="form-control" name="password" ng-model="user.password"
-                         placeholder="Escribe tu contraseña" ng-required="true" ng-minlength="7">
+                         placeholder="Escribe tu contraseña" ng-required="true" ng-minlength="8">
                 </div>
               </div>
 

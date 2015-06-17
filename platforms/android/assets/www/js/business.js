@@ -1,5 +1,8 @@
 angular.module('kupon.business', [])
 .service('$kuponServices', function( $q, $http, $db){
+
+
+
 	this.initApp = function( ) {
         return $http.post(GET_PROMOS_WS).then(function(result) {
             console.log("Data >>> ", result.data );
@@ -23,6 +26,26 @@ angular.module('kupon.business', [])
             });
         });
 	}
+
+    this.getPromosPorTitulo = function( criterio ) {
+        return $db.query( DOC_PROMOS ).then(function(doc) {
+            if( criterio === "*" ){
+                console.log("Regresando todas las promociones");
+                return doc.promociones;
+            }
+            var promociones = doc.promociones;
+            var promocionesEncontradas = [];
+            for(var i = 0; i < promociones.length; i++){
+                if( promociones[i].titulo.toUpperCase().indexOf( criterio.toUpperCase() ) >= 0 ) {
+                    promocionesEncontradas.push( promociones[i] );
+                }
+            }
+            console.log("Regresando todas las promociones encontradas");
+            return promocionesEncontradas;
+        }, function(err) {
+            return err;
+        });
+    }
 
     this.registraUsuario = function( user ) {
         return $db.query( DOC_USER ).then(function(doc) {

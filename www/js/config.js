@@ -3,10 +3,10 @@
  */
 
 //  Produccion
-//var CONTEXT_PATH_WS = "http://miskupones.com/";
+var CONTEXT_PATH_WS = "http://miskupones.com/";
 
 //  Desarrollo
-var CONTEXT_PATH_WS = "http://localhost:1337/";
+//var CONTEXT_PATH_WS = "http://localhost:1337/";
 
 // GENERAL
 var REGISTRO_WS = CONTEXT_PATH_WS + "auth/local/register/";

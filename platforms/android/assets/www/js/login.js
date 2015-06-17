@@ -23,6 +23,7 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
 
 .controller( "LoginController", function( $scope, $rootScope, $http, $db, $ionicLoading, $kuponServices){
   $scope.isLogin = true;
+  $scope.user = {identifier:"oscarman",password:"oscarman"};
   $scope.switch = function(){
     $scope.user = null;
     $scope.isLogin = !$scope.isLogin;
@@ -37,14 +38,16 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     .success(function(result,status){
         localStorage["user"] = JSON.stringify(result);
           $scope.mensaje = "Usuario válido, cargando datos del sistema ..."
-          $kuponServices.initApp().then(function(resultPromo){
-            console.log("promociones creadas :: ", resultPromo);
-            $rootScope.promociones = resultPromo.data;
-            $ionicLoading.hide();
-            window.location.href="inicio.html";
-          },function(error){
-            $ionicLoading.hide();
-            alert("Error al cargar promociones: " + JSON.stringify(error) );
+          $kuponServices.registraUsuario( result ).then( function(result){
+            $kuponServices.initApp().then(function(resultPromo){
+              console.log("promociones creadas :: ", resultPromo);
+              $rootScope.promociones = resultPromo.data;
+              $ionicLoading.hide();
+              window.location.href="inicio.html";
+            },function(error){
+              $ionicLoading.hide();
+              alert("Error al cargar promociones: " + JSON.stringify(error) );
+            });
           });
     }).error(function(err){
       $ionicLoading.hide();
@@ -61,7 +64,8 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     $scope.user.wreck = '(#$%)';
     $http.post( REGISTRO_WS, $scope.user ).success(function(result) {
       console.log("Exito al registrar nuevo usuario :: ", result)
-
+      $http.post( CLIENTE_CREATE_WS, { user: result.id, correo: $scope.user.email })
+          .then(function(resultNuevoCliente){}).catch(function(err){console.error("err ", err)});
       $kuponServices.registraUsuario( result ).then( function(resultUser){
         $kuponServices.initApp().then(function(resultPromo) {
           console.log("promociones creadas :: ", resultPromo);

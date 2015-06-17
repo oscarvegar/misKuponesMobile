@@ -55,21 +55,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
       }
     }
   })
-    .state('app.cupones', {
-      url: "/cupones",
-      views: {
-        'menuContent': {
-          templateUrl: "templates/cupones.html"
-        }
-      }
-    })
 
-  .state('app.single', {
-    url: "/playlists/:playlistId",
+  .state('app.cupones', {
+    url: "/cupones",
     views: {
       'menuContent': {
-        templateUrl: "templates/cupones.html",
-        controller: 'PlaylistCtrl'
+        templateUrl: "templates/cupones.html"
+      }
+    }
+  })
+
+  .state('app.perfil', {
+    url: "/perfil",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/perfil.html"
       }
     }
   });
