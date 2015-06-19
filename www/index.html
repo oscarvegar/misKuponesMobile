@@ -136,6 +136,17 @@
               </div>
 
               <div class="form-group">
+                <label class="item item-input item-select" style="border:none">
+                  <div class="input-label">
+                    Estado
+                  </div>
+                  <select ng-model="estadoSelected" ng-change="setEstado(estadoSelected)"
+                          ng-options="estado.id as estado.nombre for estado in estados">
+                  </select>
+                </label>
+              </div>
+
+              <div class="form-group">
                 <label for="password" class="col-md-3 control-label">Contraseña</label>
                 <div class="col-md-9">
                   <input type="password" class="form-control" name="password" ng-model="user.password"

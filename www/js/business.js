@@ -86,6 +86,18 @@ angular.module('kupon.business', [])
         return $db.query( DOC_PROMOS );
     }
 
+    this.getEstados = function(){
+        return $db.query( DOC_ESTADOS ).then( function(result) {
+            return result.estados;
+        }).catch(function(err){
+            console.log("El documento n existe, lo consultamos del web service")
+            return $http.get(ESTADOS_ALL_WS).then(function(resultWS){
+                console.log("Result from WS :: ", resultWS);
+                return $db.insert({_id:DOC_ESTADOS,estados:resultWS.data});
+            });
+        });
+    }
+
 })
 
 
