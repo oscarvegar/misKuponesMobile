@@ -1,3 +1,8 @@
+<style>
+  li.active {
+    color: #4F8EF7;
+  }
+</style>
 <div ng-controller="PromoController">
   <ion-view view-title="{{promoSelected.titulo}}">
     <ion-content>
@@ -25,6 +30,13 @@
                   {{promoSelected.cantidadKupones - promoSelected.cantidadCreados}}
                 </span>
                 <span ng-show="promoSelected.cantidadKupones <= 0" class="resaltar">Ilimitado</span>
+              </td>
+              <td align="right">
+                Me gusta <br/>
+                <ul id="icons" >
+                  <li style="text-align: center" class="ion-thumbsup" ng-class="{active: megusta}"
+                      ng-click="meGusta(promoSelected);"></li>
+                </ul>
               </td>
             </tr>
             </table>

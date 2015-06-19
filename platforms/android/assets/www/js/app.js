@@ -19,12 +19,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
     }
   });
   $db.init();
+
   $kuponServices.getPromociones().then(function(result){
     console.log("Promociones encontradas :: ", result);
     $rootScope.promociones = result.promociones;
   },function(error){
     alert("Error al cargar promociones: " + JSON.stringify(error) );
   });
+      
+
 
 })
 

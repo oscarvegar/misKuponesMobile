@@ -29,6 +29,12 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     $scope.isLogin = !$scope.isLogin;
   }
 
+
+  $kuponServices.getEstados().then(function(result){
+    $rootScope.estados = result;
+    $rootScope.estadoSelected = 9 ;
+  });
+
   $scope.login = function(){
     $scope.mensaje = ' Verificando usuario ...';
     $ionicLoading.show({
@@ -60,12 +66,21 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
       template: ' Registrando nuevo usuario ...'
     });
     console.log("Usuario que se va a registrar :: ", $scope.user);
+    console.log("Estado seleccionado :: ", $rootScope.estadoSelected);
     $scope.user.status = 1;
     $scope.user.wreck = '(#$%)';
     $http.post( REGISTRO_WS, $scope.user ).success(function(result) {
       console.log("Exito al registrar nuevo usuario :: ", result)
-      $http.post( CLIENTE_CREATE_WS, { user: result.id, correo: $scope.user.email })
-          .then(function(resultNuevoCliente){}).catch(function(err){console.error("err ", err)});
+      $http.post( CLIENTE_CREATE_WS, { user: result.id, correo: $scope.user.email, estado: $rootScope.estadoSelected })
+          .then(function(resultNuevoCliente){
+            console.log("Cliente registrado:: ", resultNuevoCliente);
+            //alert("Cliente nuevo");
+          }).
+          catch(function(err){
+            console.error("err ", err);
+            //alert("Error en registro de cliente");
+          });
+
       $kuponServices.registraUsuario( result ).then( function(resultUser){
         $kuponServices.initApp().then(function(resultPromo) {
           console.log("promociones creadas :: ", resultPromo);
@@ -89,5 +104,8 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     });
   }
 
+  $scope.setEstado = function(id){
+    $rootScope.estadoSelected = id;
+  }
 
 })

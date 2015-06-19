@@ -16,10 +16,13 @@ var VENTA_WS = CONTEXT_PATH_WS + "Venta/generaVenta/";
 var CLIENTE_WS = CONTEXT_PATH_WS + "Cliente/findById/";
 var CLIENTE_CREATE_WS = CONTEXT_PATH_WS + "Cliente/create/";
 var CLIENTE_UPDATE_WS = CONTEXT_PATH_WS + "Cliente/update/";
+var CLIENTE_DEF_MEGUSTA_WS = CONTEXT_PATH_WS + "Cliente/defineMeGusta/";
+var ESTADOS_ALL_WS = CONTEXT_PATH_WS + "Estado/getEstados/";
 
 // Nombres de documentos guardados en el PunchDB
 var DOC_PROMOS = "promociones";
 var DOC_SESION = "sesion";
 var DOC_USER = "user";
 var DOC_CLIENTE = "cliente";
+var DOC_ESTADOS = "estados";
 

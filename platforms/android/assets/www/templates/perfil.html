@@ -16,7 +16,7 @@
           </li>
         </div>
       </div>
-
+      <form name="form" >
       <div class="list">
 
         <div class="row">
@@ -43,24 +43,51 @@
           <input type="text" placeholder="Escribe tus apellidos" ng-model="cliente.apellidos"
                  ng-disabled="!editar">
         </label>
+
+        <div class="form-group">
+          <label class="item item-input item-select" style="border:none">
+            <div class="input-label">
+              Estado
+            </div>
+            <select ng-model="estadoSelected" ng-change="setEstado(estadoSelected)"
+                    ng-options="estado.id as estado.nombre for estado in estados">
+            </select>
+          </label>
+        </div>
+
         <label class="item item-input item-stacked-label">
           <span class="input-label">Email</span>
-          <input type="text" placeholder="Escribe tu correo" ng-model="cliente.correo"
-                 ng-disabled="!editar">
+          <input type="email" placeholder="Escribe tu correo" ng-model="cliente.correo"
+                 ng-disabled="!editar" ng-required="true" name="email"
+                 ng-pattern="/^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/">
         </label>
+        <div style="position: relative;top: 0px" class="error" ng-show="form.email.$dirty && form.email.$invalid">
+          <span ng-show="form.email.$error.required">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="glyphicon glyphicon-info-sign "></span>  El correo electrónico es obligatorio
+          </span>
+          <span ng-show="form.email.$error.pattern">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="glyphicon glyphicon-info-sign "></span>  El correo electrónico es inválido
+          </span>
+        </div>
         <label class="item item-input item-stacked-label">
           <span class="input-label">Telefono</span>
-          <input type="text" placeholder="Escribe tu telefono" ng-model="cliente.telefono"
+          <input type="tel" placeholder="Escribe tu telefono" ng-model="cliente.telefono"
                  ng-disabled="!editar">
         </label>
       </div>
+      <br/>
+      <div>
+        <button class="button button-full button-balanced" ng-click="actualizarCliente()"
+                type="button" ng-disabled="!editar">
+          REALIZAR CAMBIOS
+        </button>
+      </div>
+      </form>
     </ion-content>
 
-    <div class="bar bar-footer">
-      <button href="#/app/compra" class="button button-full button-balanced" ng-click="comprar()">
-        REALIZAR CAMBIOS
-      </button>
-    </div>
+
 
   </div>
 
