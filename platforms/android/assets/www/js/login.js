@@ -23,12 +23,11 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
 
 .controller( "LoginController", function( $scope, $rootScope, $http, $db, $ionicLoading, $kuponServices){
   $scope.isLogin = true;
-  $scope.user = {identifier:"oscarman",password:"oscarman"};
+  //$scope.user = {identifier:"oscarman",password:"oscarman"};
   $scope.switch = function(){
     $scope.user = null;
     $scope.isLogin = !$scope.isLogin;
   }
-
 
   $kuponServices.getEstados().then(function(result){
     $rootScope.estados = result;

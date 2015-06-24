@@ -3,10 +3,10 @@
  */
 
 //  Produccion
-var CONTEXT_PATH_WS = "http://miskupones.com/";
+//var CONTEXT_PATH_WS = "http://miskupones.com/";
 
 //  Desarrollo
-//var CONTEXT_PATH_WS = "http://localhost:1337/";
+var CONTEXT_PATH_WS = "http://localhost:1337/";
 
 // GENERAL
 var REGISTRO_WS = CONTEXT_PATH_WS + "auth/local/register/";
@@ -18,6 +18,7 @@ var CLIENTE_CREATE_WS = CONTEXT_PATH_WS + "Cliente/create/";
 var CLIENTE_UPDATE_WS = CONTEXT_PATH_WS + "Cliente/update/";
 var CLIENTE_DEF_MEGUSTA_WS = CONTEXT_PATH_WS + "Cliente/defineMeGusta/";
 var ESTADOS_ALL_WS = CONTEXT_PATH_WS + "Estado/getEstados/";
+var MIS_KUPONES_WS = CONTEXT_PATH_WS + "Kupon/misKupones/";
 
 // Nombres de documentos guardados en el PunchDB
 var DOC_PROMOS = "promociones";
@@ -25,4 +26,8 @@ var DOC_SESION = "sesion";
 var DOC_USER = "user";
 var DOC_CLIENTE = "cliente";
 var DOC_ESTADOS = "estados";
+
+// Nombres para el LocalStorage
+
+var LOCAL_ESTADO_SELECTED = "estadoSelected";
 

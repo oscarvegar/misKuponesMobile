@@ -15,6 +15,7 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
     getCliente = function(){
         $db.query( DOC_USER ).then( function( result ){
             $rootScope.user = result.user;
+            console.log(" id a buscar en " + CLIENTE_WS + " ::::  ", result.user.id)
             $http.post(CLIENTE_WS, {id:result.user.id}).then(function( resultClient ){
                 console.log( "client :: ", resultClient.data );
                 $rootScope.cliente = resultClient.data;
@@ -24,6 +25,10 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
                 }else{
                     $rootScope.estadoSelected = 9;
                 }
+            },function(err){
+                console.error("Error ::::: ", err);
+            }).catch(function(err){
+                console.error("Error al extraer el cliente :: ", err);
             });
         });
     };
@@ -105,7 +110,8 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
     }
 
     $scope.actualizarLista = function(){
-      $kuponServices.initApp().then(function(resultPromo) {
+
+      $kuponServices.initApp($rootScope.user.id).then(function(resultPromo) {
           console.log("actualizando promociones :: ", resultPromo);
           $rootScope.promociones = resultPromo.data;
           $scope.$broadcast('scroll.refreshComplete');
@@ -123,8 +129,8 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
     }
 
     $scope.comprar = function() {
-    window.location.href = "#/app/compra";
-    $rootScope.cantidad = 1;
+        window.location.href = "#/app/compra";
+        $rootScope.cantidad = 1;
     }
 
     $scope.aplicaCantidad = function(cantidad){
@@ -133,33 +139,37 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
     }
 
     $scope.confirmarCompra = function() {
-    //alert("cantidad a comprar :: ", $rootScope.cantidad );
-    $ionicLoading.show({
-      template: "Procesando tu compra ..."
-    });
-    console.log("Promocion seleccionada :: ", $rootScope.promoSelected )
-    var user = JSON.parse(localStorage["user"]);
-    console.log("user logged : ", user);
-    var request = { promocionId: $rootScope.promoSelected.promocionId,
-                    subcategoriaId: $rootScope.promoSelected.subCategoriaId,
-                    user: user.id,
-                    cantidad: eval($rootScope.cantidad),
-                    total: ($rootScope.promoSelected.precioKupon *  $rootScope.cantidad)};
-    $http.post( VENTA_WS, request ).then(function(result){
-      alert( "Tu compra se ha realizado correctamente, " +
-      "podrás ver tu kupon en el apartado de Mis Kupones. Gracias por usar MisKupones." );
-      $kuponServices.actualizarCantidadPromo( eval($rootScope.cantidad), $rootScope.indexPromoSelected )
-     .then(function(resultUpd){
-        window.location.href = "inicio.html";
-        $ionicLoading.hide();
-      },function(error){
-        $ionicLoading.hide();
-        alert("Error al actualiar cantidad: " + JSON.stringify(error) );
-      });
-    },function(error){
-      $ionicLoading.hide();
-      alert("Error al generar la venta: " + JSON.stringify(error) );
-    });
+        //alert("cantidad a comprar :: ", $rootScope.cantidad );
+        $ionicLoading.show({
+          template: "Procesando tu compra ..."
+        });
+        console.log("Promocion seleccionada :: ", $rootScope.promoSelected )
+        var user = JSON.parse(localStorage["user"]);
+        var estadoId = localStorage[ LOCAL_ESTADO_SELECTED ];
+        console.log("user logged : ", user);
+        console.log("estado ID : ", estadoId);
+        var request = { promocionId: $rootScope.promoSelected.promocionId,
+                        subcategoriaId: $rootScope.promoSelected.subCategoriaId,
+                        user: user.id,
+                        estadoId: estadoId,
+                        cantidad: eval($rootScope.cantidad),
+                        total: ($rootScope.promoSelected.precioKupon *  $rootScope.cantidad)};
+
+        $http.post( VENTA_WS, request ).then(function(result){
+          alert( "Tu compra se ha realizado correctamente, " +
+          "podrás ver tu kupon en el apartado de Mis Kupones. Gracias por usar MisKupones." );
+          $kuponServices.actualizarCantidadPromo( eval($rootScope.cantidad), $rootScope.indexPromoSelected )
+         .then(function(resultUpd){
+            window.location.href = "inicio.html";
+            $ionicLoading.hide();
+          },function(error){
+            $ionicLoading.hide();
+            alert("Error al actualiar cantidad: " + JSON.stringify(error) );
+          });
+        },function(error){
+          $ionicLoading.hide();
+          alert("Error al generar la venta: " + JSON.stringify(error) );
+        });
     }
 
 
@@ -191,7 +201,5 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
     }
       
   }
-    
-
 
 });

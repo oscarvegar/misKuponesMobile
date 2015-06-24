@@ -25,11 +25,14 @@
     <!-- your app's js -->
     <script src="lib/pouchdb-3.6.0.min.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/miskupones.js"></script>
     <script src="js/login.js"></script>
     <script src="js/controllers.js"></script>
+
   </head>
 
   <body ng-app="starter">
+  <ion-content>
     <div class="container" ng-controller="LoginController">
 
       <div class="row text-center" ng-show="isLogin" >
@@ -91,12 +94,16 @@
         </div>
       </div>
 
+      <!-- PAGINA DE REGISTRO -->
+
       <div id="signupbox" ng-hide="isLogin" style="margin-top:50px;">
+
         <div class="panel panel-info" style="border: none">
           <div class="panel-heading">
             <div class="panel-title">Registro</div>
           </div>
           <div class="panel-body" >
+
             <form id="signupform" name="form" class="form-horizontal" role="form" ng-submit="registrar()">
 
               <div ng-show="errorRegistro" id="login-alert-registro"
@@ -186,12 +193,13 @@
                   Ingresar
                 </button>
               </div>
-
             </form>
           </div>
         </div>
       </div>
+
     </div>
+    </ion-content>
 <!--
     <div class="bar bar-footer">
       <table width="100%" >
