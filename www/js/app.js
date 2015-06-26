@@ -84,6 +84,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
         templateUrl: "templates/miskupones.html"
       }
     }
+  })
+
+
+  .state('app.kuponDetalle', {
+    url: "/kuponDetalle",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/kuponDetalle.html"
+      }
+    }
   });
 
   // if none of the above states are matched, use this as the fallback

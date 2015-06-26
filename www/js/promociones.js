@@ -2,7 +2,8 @@
  * Created by oscar on 02/04/15.
  */
 var myApp = angular.module("PromoModule",['ionic','ngCordova']);
-myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope, $kuponServices, $db, $ionicLoading,$cordovaSocialSharing){
+myApp.controller( "PromoController",
+    function($timeout,$scope, $http, $rootScope, $kuponServices, $db, $ionicLoading,$cordovaSocialSharing,$ionicPopup, $timeout){
 
 
 
@@ -129,6 +130,14 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
     }
 
     $scope.comprar = function() {
+        $rootScope.disponibles = [];
+        if($scope.promoSelected.cantidadKupones <= 10) {
+            for (var i = 0; i < $scope.promoSelected.cantidadKupones; i++) {
+                $rootScope.disponibles.push(i + 1);
+            }
+        }else{
+            $rootScope.disponibles = [1,2,3,4,5,6,7,8,9,10];
+        }
         window.location.href = "#/app/compra";
         $rootScope.cantidad = 1;
     }
@@ -140,6 +149,7 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
 
     $scope.confirmarCompra = function() {
         //alert("cantidad a comprar :: ", $rootScope.cantidad );
+
         $ionicLoading.show({
           template: "Procesando tu compra ..."
         });
@@ -156,15 +166,28 @@ myApp.controller( "PromoController", function($timeout,$scope, $http, $rootScope
                         total: ($rootScope.promoSelected.precioKupon *  $rootScope.cantidad)};
 
         $http.post( VENTA_WS, request ).then(function(result){
-          alert( "Tu compra se ha realizado correctamente, " +
-          "podrás ver tu kupon en el apartado de Mis Kupones. Gracias por usar MisKupones." );
-          $kuponServices.actualizarCantidadPromo( eval($rootScope.cantidad), $rootScope.indexPromoSelected )
-         .then(function(resultUpd){
-            window.location.href = "inicio.html";
-            $ionicLoading.hide();
+           $kuponServices.actualizarCantidadPromo( eval($rootScope.cantidad), $rootScope.indexPromoSelected )
+          .then(function(resultUpd){
+                $ionicLoading.hide();
+                var myPopup = $ionicPopup.show({
+                   template: '<b><center>Tu compra se ha realizado correctamente, podrás ver tu kupon en el apartado de Mis Kupones. Gracias por usar MisKupones</center></b>',
+                   title: 'Compra Finalizada',
+                   scope: $scope,
+                   buttons: [
+                       { text: 'Aceptar' }
+                   ]
+                });
+                myPopup.then(function(res) {
+                   console.log('Tapped!', res);
+                   window.location.href = "inicio.html";
+                });
+                $timeout(function() {
+                   myPopup.close(); //close the popup after 3 seconds for some reason
+                    window.location.href = "inicio.html";
+                }, 3000);
           },function(error){
-            $ionicLoading.hide();
-            alert("Error al actualiar cantidad: " + JSON.stringify(error) );
+                $ionicLoading.hide();
+                alert("Error al actualiar cantidad: " + JSON.stringify(error) );
           });
         },function(error){
           $ionicLoading.hide();
