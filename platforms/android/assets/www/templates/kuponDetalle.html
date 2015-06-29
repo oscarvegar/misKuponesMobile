@@ -1,0 +1,24 @@
+<div ng-controller="MisKuponesController" animation="slide-left-right-ios7">
+    <ion-view view-title="MIS KUPONES">
+        <ion-content>
+            <div class="card balanced" style="border: none">
+                <div class="item item-text-wrap" style="text-align: center; border: none">
+                    {{kuponSelected.promocion.titulo}}
+                </div>
+            </div>
+            <ion-slide-box>
+                <ion-slide ng-repeat="kupon in kuponSelected.miskupones" >
+                    <div>
+                        <center>
+                            <h4> Kupon {{$index + 1}} </h4>
+                            <div id="kupon{{kupon.kuponId}}"></div>
+                            <br/>
+                            <b><span class="badge badge-balanced">&nbsp;</span> Este kupon esta activo</b>
+                        </center>
+                    </div>
+                </ion-slide>
+            </ion-slide-box>
+        </ion-content>
+    </ion-view>
+</div>
+

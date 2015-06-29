@@ -1,0 +1,17 @@
+<ion-view view-title="Mis Kupones Comprados">
+  <div ng-controller="MisKuponesController">
+    <ion-content>
+      <div class="list">
+        <a href="#/app/kuponDetalle" class="item item-thumbnail-left cursor" ng-repeat="kupon in miskupones"
+           style="font-size: 13px;" ng-click="getkupones(kupon)">
+          <img src="{{kupon.promocion.imagenesUrls[0]}}">
+          <h2>{{kupon.promocion.titulo}}</h2>
+          <b>Kupon: </b><span style="color: #204d74"> {{kupon.promocion.precioKupon | currency}} </span><br/>
+          <b>Cantidad: </b> <span style="color: #204d74">{{kupon.cantidad }} </span><br/>
+          <b>Comprado:</b><span style="color: #204d74"> {{kupon.createdAt | date:"dd/MMM/yyyy"}}</span> <br/>
+          <b>Válido hasta:</b> <span style="color: #204d74">{{kupon.promocion.finVigencia | date:"dd/MMM/yyyy"}}</span> </b>
+        </a>
+      </div>
+    </ion-content>
+  </div>
+</ion-view>

@@ -3,15 +3,16 @@
  */
 
 //  Produccion
-var CONTEXT_PATH_WS = "http://miskupones.com/";
+//var CONTEXT_PATH_WS = "http://miskupones.com/";
 
 //  Desarrollo
-//var CONTEXT_PATH_WS = "http://localhost:1337/";
+var CONTEXT_PATH_WS = "http://localhost:1337/";
 
 // GENERAL
 var REGISTRO_WS = CONTEXT_PATH_WS + "auth/local/register/";
 var LOGIN_WS = CONTEXT_PATH_WS + "loginapp/";
 var GET_PROMOS_WS = CONTEXT_PATH_WS + "Promocion/findByLimit/";
+var GET_PROMOS_ESTADO_WS = CONTEXT_PATH_WS + "Promocion/findByEstado/";
 var VENTA_WS = CONTEXT_PATH_WS + "Venta/generaVenta/";
 var CLIENTE_WS = CONTEXT_PATH_WS + "Cliente/findById/";
 var CLIENTE_CREATE_WS = CONTEXT_PATH_WS + "Cliente/create/";

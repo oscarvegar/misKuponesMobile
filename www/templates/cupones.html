@@ -1,27 +1,48 @@
-<ion-view view-title="Cupones Disponibles">
-  <div ng-controller="PromoController">
-    <div class="row bar bar-subheader">
-      <label class="item item-input" style="width: 100%">
-        <i class="icon ion-search placeholder-icon"></i>
-        <input type="text" placeholder="Search" style="width: 100%" ng-model="criteria"
-               ng-change="buscarPorNombre()">
-      </label>
-    </div>
-    <ion-content>
-      <ion-refresher pulling-text="Actualizando promociones ..."
-                     on-refresh="actualizarLista()"></ion-refresher>
-      <br/><br/>
-      <div class="list">
-        <a class="item item-thumbnail-left" href="#"
-           ng-repeat="promocion in promociones" ng-click="getPromocion(promocion, $index)">
-          <img src="{{promocion.imagenesUrls[0]}}">
-          <h2>{{promocion.titulo}}</h2>
-          <p>{{promocion.descripcionCorta }}</p>
-          <b>De:</b> <span style="font-size: 12px;text-decoration: line-through">{{promocion.precioRegular | currency}} </span> <b>a</b>
-          <span style="color: #204d74">{{promocion.precioDescuento | currency}}</span><br/>
-          <b>Kupon: </b><span style="color: #204d74"> {{promocion.precioKupon | currency}} </span>
-        </a>
-      </div>
-    </ion-content>
+<ion-view view-title="Cupones Disponibles" ng-controller="PromoController">
+
+  <div class="row bar bar-subheader">
+    <label class="item item-input" style="width: 100%">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input type="text" placeholder="Search" style="width: 100%" ng-model="criteria"
+             ng-change="buscarPorNombre()">
+    </label>
   </div>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-icon ion-more" ng-click="popover.show($event)">
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-refresher pulling-text="Actualizando promociones ..."
+                   on-refresh="actualizarLista()"></ion-refresher>
+    <br/><br/>
+    <div class="list">
+      <a class="item item-thumbnail-left" href="#"
+         ng-repeat="promocion in promociones" ng-click="getPromocion(promocion, $index)">
+        <img src="{{promocion.imagenesUrls[0]}}">
+        <h2>{{promocion.titulo}}</h2>
+        <p>{{promocion.descripcionCorta }}</p>
+        <b>De:</b> <span style="font-size: 12px;text-decoration: line-through">{{promocion.precioRegular | currency}} </span> <b>a</b>
+        <span style="color: #204d74">{{promocion.precioDescuento | currency}}</span><br/>
+        <b>Kupon: </b><span style="color: #204d74"> {{promocion.precioKupon | currency}} </span>
+      </a>
+    </div>
+  </ion-content>
+
+  <script id="templates/popover.html" type="text/ng-template">
+    <ion-popover-view>
+      <ion-content>
+        <div class="list">
+          <a class="item" ng-click="prepararBusqueda(1)">
+            Kupones por Estado
+          </a>
+          <a class="item" ng-click="prepararBusqueda(2)">
+            Kupones por Categoria
+          </a>
+        </div>
+      </ion-content>
+    </ion-popover-view>
+  </script>
+
 </ion-view>

@@ -26,6 +26,28 @@ angular.module('kupon.business', [])
         });
 	}
 
+    this.getPromosPorEstado = function( estadoId ){
+        return $http.post(GET_PROMOS_ESTADO_WS, {estadoId:estadoId}).then(function(result) {
+            console.log("PROMOS POR ESTADO BD >>> ", result.data );
+            return $db.query( DOC_PROMOS ).then(function(doc) {
+                return $db.db.put({_id: DOC_PROMOS, _rev: doc._rev, promociones: result.data.promociones })
+                    .then(function(resultUpd){
+                        resultUpd.data = result.data.promociones;
+                        return resultUpd;
+                    });
+            }, function(err) {
+                if(err.status ===  404 ){
+                    // El documento no existe, lo creamos
+                    console.log("El documento no existe, lo creamos");
+                    return $db.insert({_id:DOC_PROMOS,promociones:result.data.promociones});
+                }else{
+                    throw err;
+                }
+            });
+
+        });
+    }
+
     this.getPromosPorTitulo = function( criterio ) {
         return $db.query( DOC_PROMOS ).then(function(doc) {
             if( criterio === "*" ){

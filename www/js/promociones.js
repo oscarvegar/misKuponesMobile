@@ -3,9 +3,13 @@
  */
 var myApp = angular.module("PromoModule",['ionic','ngCordova']);
 myApp.controller( "PromoController",
-    function($timeout,$scope, $http, $rootScope, $kuponServices, $db, $ionicLoading,$cordovaSocialSharing,$ionicPopup, $timeout){
+    function($timeout,$scope, $http, $rootScope, $kuponServices, $db, $ionicLoading,$cordovaSocialSharing,$ionicPopup, $timeout, $ionicPopover){
 
-
+    $ionicPopover.fromTemplateUrl('templates/popover.html', {
+        scope: $scope,
+    }).then(function(popover) {
+        $scope.popover = popover;
+    });
 
     $scope.editar = false;
 
@@ -223,6 +227,60 @@ myApp.controller( "PromoController",
 
     }
       
+  }
+
+
+
+  var BUSQUEDA_POR_ESTADO = 1
+  // Para busqueda de kupones
+  $scope.prepararBusqueda = function( tipo ){
+      if( tipo === BUSQUEDA_POR_ESTADO ){
+          // An elaborate, custom popup
+          var myPopup = $ionicPopup.show({
+              template: '<select ng-model="estadoSelected" ng-change="setEstado(estadoSelected)" ' +
+                        'ng-options="estado.id as estado.nombre for estado in estados"> ' +
+                        '</select>',
+              title: 'Busqueda de kupones por estado',
+              subTitle: 'Seleccione un estado',
+              scope: $scope,
+              buttons: [
+                  { text: 'Cancel' },
+                  {
+                      text: '<b>Buscar</b>',
+                      type: 'button-positive',
+                      onTap: function(e) {
+                          //console.log("Estado selected: ", $scope.estadoSelected);
+                          localStorage[ LOCAL_ESTADO_SELECTED ] = $scope.estadoSelected;
+                          return $scope.estadoSelected;
+                      }
+                  }
+              ]
+          });
+          myPopup.then(function(res) {
+            $ionicLoading.show({
+              template: "Buscando tus kupones ..."
+            });
+            $kuponServices.getPromosPorEstado( res ).then(function(resultPromo) {
+                console.log("actualizando promociones :: ", resultPromo);
+                $rootScope.promociones = resultPromo.data;
+                $scope.$broadcast('scroll.refreshComplete');
+                if(!$scope.$$phase) {
+                    $scope.$apply()
+                }
+                $ionicLoading.hide();
+            },function(error){
+                $ionicLoading.hide();
+                $scope.$broadcast('scroll.refreshComplete');
+                if(!$scope.$$phase) {
+                    $scope.$apply()
+                }
+                alert("Error al cargar promociones: " + JSON.stringify(error) );
+            });;
+          });
+      }else{
+
+      }
+      $scope.popover.hide();
   }
 
 });

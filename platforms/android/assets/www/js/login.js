@@ -21,9 +21,11 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
   $db.init();
 })
 
-.controller( "LoginController", function( $scope, $rootScope, $http, $db, $ionicLoading, $kuponServices){
+.controller( "LoginController", function( $scope, $rootScope, $http, $db, $ionicLoading, $kuponServices, $ionicPopup, $timeout){
+
   $scope.isLogin = true;
-  //$scope.user = {identifier:"oscarman",password:"oscarman"};
+  $scope.user = {};
+
   $scope.switch = function(){
     $scope.user = null;
     $scope.isLogin = !$scope.isLogin;
@@ -43,8 +45,8 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     .success(function(result,status){
         localStorage["user"] = JSON.stringify(result);
           $scope.mensaje = "Usuario válido, cargando datos del sistema ..."
-          $kuponServices.registraUsuario( result ).then( function(result){
-            $kuponServices.initApp().then(function(resultPromo){
+          $kuponServices.registraUsuario( result ).then( function(resultUser){
+            $kuponServices.initApp(result.id).then(function(resultPromo){
               console.log("promociones creadas :: ", resultPromo);
               $rootScope.promociones = resultPromo.data;
               $ionicLoading.hide();
@@ -56,7 +58,23 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
           });
     }).error(function(err){
       $ionicLoading.hide();
-      $scope.errorLogin = "El usuario y/o contraseña son incorrectos";
+      //$scope.errorLogin = "El usuario y/o contraseña son incorrectos";
+      var myPopup = $ionicPopup.show({
+        template: '<b><center>El usuario y/o contraseña son incorrectos</center></b>',
+        title: 'Error en datos de acceso',
+        subTitle: '',
+        scope: $scope,
+        buttons: [
+          { text: 'Aceptar' }
+        ]
+      });
+      myPopup.then(function(res) {
+        console.log('Tapped!', res);
+      });
+      $timeout(function() {
+        myPopup.close(); //close the popup after 3 seconds for some reason
+      }, 3000);
+
     });
   }
 
@@ -69,7 +87,7 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     $scope.user.status = 1;
     $scope.user.wreck = '(#$%)';
     $http.post( REGISTRO_WS, $scope.user ).success(function(result) {
-      console.log("Exito al registrar nuevo usuario :: ", result)
+      localStorage["user"] = JSON.stringify(result);
       $http.post( CLIENTE_CREATE_WS, { user: result.id, correo: $scope.user.email, estado: $rootScope.estadoSelected })
           .then(function(resultNuevoCliente){
             console.log("Cliente registrado:: ", resultNuevoCliente);
@@ -77,11 +95,11 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
           }).
           catch(function(err){
             console.error("err ", err);
-            //alert("Error en registro de cliente");
+            alert("Error en registro de cliente :: " + JSON.stringify(err) );
           });
 
       $kuponServices.registraUsuario( result ).then( function(resultUser){
-        $kuponServices.initApp().then(function(resultPromo) {
+        $kuponServices.initApp(result.id).then(function(resultPromo) {
           console.log("promociones creadas :: ", resultPromo);
           $rootScope.promociones = resultPromo.data;
           $ionicLoading.hide();
@@ -92,11 +110,26 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
         });
       },function(error){
         $ionicLoading.hide();
-        //alert("Error al registrar usuario: " + JSON.stringify(error) );
+        alert("Error al registrar usuario: " + JSON.stringify(error) );
       });
 
-    }).error(function(error){
-      $scope.errorRegistro = "Error al registrar: El usuario y/o correo electrónico ya existen.";
+    }).error(function(error) {
+      //$scope.errorRegistro = "Error al registrar: El usuario y/o correo electrónico ya existen.";
+      var myPopup2 = $ionicPopup.show({
+        template: '<b><center>El usuario y/o correo electrónico ya existen</center></b>',
+        title: 'Error al registrar nuevo usuario',
+        subTitle: '',
+        scope: $scope,
+        buttons: [
+          {text: 'Aceptar'}
+        ]
+      });
+      myPopup2.then(function (res) {
+        console.log('Tapped!', res);
+      });
+      $timeout(function () {
+        myPopup2.close(); //close the popup after 3 seconds for some reason
+      }, 3000);
       $ionicLoading.hide();
       //alert("Error al intentar registrar: " + JSON.stringify(error));
       console.error("Error al registrar nuevo usuario: ", error)
@@ -106,5 +139,6 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
   $scope.setEstado = function(id){
     $rootScope.estadoSelected = id;
   }
+
 
 })

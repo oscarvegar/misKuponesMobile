@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.business', 'PromoModule'])
+angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.business', 'PromoModule', 'MisKuponesModule'])
 
 .run(function($ionicPlatform, $kuponServices, $db, $rootScope) {
   $ionicPlatform.ready(function() {
@@ -75,6 +75,25 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
         templateUrl: "templates/perfil.html"
       }
     }
+  })
+
+  .state('app.misKupones', {
+    url: "/misKupones",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/miskupones.html"
+      }
+    }
+  })
+
+
+  .state('app.kuponDetalle', {
+    url: "/kuponDetalle",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/kuponDetalle.html"
+      }
+    }
   });
 
   // if none of the above states are matched, use this as the fallback
@@ -85,4 +104,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
   $scope.salir = function(){
     ionic.Platform.exitApp();
   }
+
 });
