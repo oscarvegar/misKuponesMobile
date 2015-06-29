@@ -210,6 +210,7 @@ myApp.controller( "PromoController",
       $cordovaSocialSharing.shareViaFacebook(null, null, "http://miskupones.com/v/promocion/"+promo.promocionId)
       .then(function(result) {
         $ionicLoading.hide()
+        $http.post(FB_SHARE+promo.promocionId).success(console.log);
     }, function(err) {
         $ionicLoading.hide()
         console.error("ERROR",err);

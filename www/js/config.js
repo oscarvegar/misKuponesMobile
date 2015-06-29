@@ -20,6 +20,7 @@ var CLIENTE_UPDATE_WS = CONTEXT_PATH_WS + "Cliente/update/";
 var CLIENTE_DEF_MEGUSTA_WS = CONTEXT_PATH_WS + "Cliente/defineMeGusta/";
 var ESTADOS_ALL_WS = CONTEXT_PATH_WS + "Estado/getEstados/";
 var MIS_KUPONES_WS = CONTEXT_PATH_WS + "Kupon/misKupones/";
+var FB_SHARE = CONTEXT_PATH_WS + "share/fb/";
 
 // Nombres de documentos guardados en el PunchDB
 var DOC_PROMOS = "promociones";
