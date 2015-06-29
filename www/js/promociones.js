@@ -77,6 +77,18 @@ myApp.controller( "PromoController",
         $rootScope.estadoSelected = id;
     }
 
+    $scope.setCategoria = function(id){
+        $scope.categoriaSelected = id;
+        $http.post( SUBCATEGORIAS_WS, {categoriaId:id} ).then(function(result){
+            $scope.categoData.subcategorias = result.data;
+            $scope.subCategoriaSelected = $scope.categoData.subcategorias[0].subCategoriaId;
+        })
+    }
+
+    $scope.setSubCategoria = function(id){
+        $scope.subCategoriaSelected = id;
+    }
+
     $scope.getPromocion = function ( promo, index ) {
     console.log("promo :: ", promo);
     $rootScope.promoSelected = promo;
@@ -201,7 +213,7 @@ myApp.controller( "PromoController",
 
 
 
-  $scope.shareViaFacebook = function(promo) {
+    $scope.shareViaFacebook = function(promo) {
     console.log(promo)
     try{
       $ionicLoading.show({
@@ -232,9 +244,10 @@ myApp.controller( "PromoController",
 
 
 
-  var BUSQUEDA_POR_ESTADO = 1
-  // Para busqueda de kupones
-  $scope.prepararBusqueda = function( tipo ){
+    var BUSQUEDA_POR_ESTADO = 1
+
+    // Para busqueda de kupones
+    $scope.prepararBusqueda = function( tipo ){
       if( tipo === BUSQUEDA_POR_ESTADO ){
           // An elaborate, custom popup
           var myPopup = $ionicPopup.show({
@@ -258,11 +271,11 @@ myApp.controller( "PromoController",
               ]
           });
           myPopup.then(function(res) {
+            if(!res) return;
             $ionicLoading.show({
               template: "Buscando tus kupones ..."
             });
             $kuponServices.getPromosPorEstado( res ).then(function(resultPromo) {
-                console.log("actualizando promociones :: ", resultPromo);
                 $rootScope.promociones = resultPromo.data;
                 $scope.$broadcast('scroll.refreshComplete');
                 if(!$scope.$$phase) {
@@ -279,7 +292,55 @@ myApp.controller( "PromoController",
             });;
           });
       }else{
-
+          $scope.categoData = JSON.parse(localStorage["categoData"]);
+          $scope.categoriaSelected = $scope.categoData.categorias[0].categoriaId;
+          $scope.subCategoriaSelected = $scope.categoData.subcategorias[0].subCategoriaId;
+          console.log("subCategoriaSelected antes de ... :: ", $scope.subCategoriaSelected)
+          var myPopup = $ionicPopup.show({
+              template: '<select ng-model="categoriaSelected" ng-change="setCategoria(categoriaSelected)" ' +
+              'ng-options="categoria.categoriaId as categoria.descripcion for categoria in categoData.categorias"> ' +
+              '</select><select ng-model="subCategoriaSelected" ng-change="setSubCategoria(subCategoriaSelected)" ' +
+              'ng-options="subcategoria.subCategoriaId as subcategoria.descripcion for subcategoria in categoData.subcategorias"> ' +
+              '</select> ',
+              title: 'Busqueda de kupones por categoria',
+              subTitle: 'Seleccione una categoria',
+              scope: $scope,
+              buttons: [
+                  { text: 'Cancel' },
+                  {
+                      text: '<b>Buscar</b>',
+                      type: 'button-positive',
+                      onTap: function(e) {
+                          return $scope.subCategoriaSelected;
+                      }
+                  }
+              ]
+          });
+          myPopup.then(function(res) {
+              if(!res) return;
+              $ionicLoading.show({
+                  template: "Buscando tus kupones ..."
+              });
+              var request = {estadoId: localStorage[ LOCAL_ESTADO_SELECTED ], subcategoriaId: res};
+              $http.post(GET_PROMOS_ESTADO_CATEGO_WS, request)
+              .then(function(result){
+                  console.log("Promociones por categoria: ", result.data )
+                  $rootScope.promociones = result.data.promociones;
+                  $scope.$broadcast('scroll.refreshComplete');
+                  if(!$scope.$$phase) {
+                      $scope.$apply()
+                  }
+                  $ionicLoading.hide();
+              })
+              .catch(function(err){
+                  $ionicLoading.hide();
+                  $scope.$broadcast('scroll.refreshComplete');
+                  if(!$scope.$$phase) {
+                      $scope.$apply()
+                  }
+                  alert("Error al cargar promociones: " + JSON.stringify(error) );
+              })
+          });
       }
       $scope.popover.hide();
   }

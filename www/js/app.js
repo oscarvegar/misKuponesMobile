@@ -26,8 +26,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
   },function(error){
     alert("Error al cargar promociones: " + JSON.stringify(error) );
   });
-      
 
+  // Obtener categorias
+  $kuponServices.getCategorias().then(function(result){
+    console.log("RESULT DE CATEGORIAS :::: ", result);
+    localStorage["categoData"] = JSON.stringify(result);
+  });
 
 })
 
@@ -101,6 +105,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
 
 })
 .controller("AppController", function($scope, $http){
+
   $scope.salir = function(){
     ionic.Platform.exitApp();
   }

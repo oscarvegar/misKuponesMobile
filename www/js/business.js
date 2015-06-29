@@ -119,6 +119,18 @@ angular.module('kupon.business', [])
         });
     }
 
+    this.getCategorias = function(){
+        return $http.post(CATEGORIAS_WS)
+        .then(function(result){
+                //console.log(" Categorias encontradas:: ", result.data);
+                return result.data;
+            })
+        .catch(function(err){
+                console.error("Error al cargar las categorias:: ", err)
+                return err;
+            });
+    }
+
 })
 
 
