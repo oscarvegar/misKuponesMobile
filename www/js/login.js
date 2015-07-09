@@ -25,6 +25,7 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
 
   $scope.isLogin = true;
   $scope.user = {};
+      $scope.email = null;
 
   $scope.switch = function(){
     $scope.user = null;
@@ -46,7 +47,7 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
         localStorage["user"] = JSON.stringify(result);
           $scope.mensaje = "Usuario válido, cargando datos del sistema ..."
           $kuponServices.registraUsuario( result ).then( function(resultUser){
-            $kuponServices.initApp(result.id).then(function(resultPromo){
+            $kuponServices.initApp(result.id).then(function(resultPromo) {
               console.log("promociones creadas :: ", resultPromo);
               $rootScope.promociones = resultPromo.data;
               $ionicLoading.hide();
@@ -140,5 +141,63 @@ angular.module('starter', ['ionic', 'starter.controllers','validation.match', 'k
     $rootScope.estadoSelected = id;
   }
 
+  $scope.toRecoverPwd = function(){
+    $scope.msgErr = "";
+    var myPopup2 = $ionicPopup.show({
+      template: '<b><center>Por favor, ingrese su correo electronico con el cual se registro</center></b><br/>' +
+                '<input type="email" name="emailRec" id="emailRec" ng-model="emailRec"  /><span id="msgErr" class="assertive">{{msgErr}}</span>',
+      title: 'Recuperación de contraseña',
+      subTitle: '',
+      scope: $scope,
+      buttons: [
+        {text: 'Aceptar',
+         onTap: function(e) {
+           var correo = document.getElementById("emailRec").value;
+           if( !correo ){
+             $scope.msgErr = "El correo electrónico es obligatorio";
+             e.preventDefault();
+           }else{
+             var pattern =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+             var isValidEmail = pattern.test(correo);  // returns a boolean
+             if(isValidEmail){
+               return correo;
+             }else{
+               $scope.msgErr = "El correo electrónico es incorrecto";
+               e.preventDefault();
+             }
+           }
+        }}
+        ,{text:'Cancelar'}
+      ]
+    });
+    myPopup2.then(function (res) {
+      console.log('Tapped!', res);
+      $ionicLoading.show({
+        template: ' Procesando solicitud ...'
+      });
+      $http.post(SOLICITUD_CAMBIO_PWD_WS,{email:res}).then(function(res){
+        console.log("Respuesta del server: ", res.data);
+        var bodyMsg = 'Te enviamos tu nueva contraseña a tu correo electrónico que nos proporcionaste.';
+        var titleMsg = 'Recuperación de contraseña';
+        var subTitleMsg = '';
+        if(res.data.error){
+          bodyMsg = '<span class="assertive"><i class="icon ion-close-circled"></i>  ' + res.data.msg + '</span>';
+          titleMsg = 'Error de recuperación de contraseña';
+          subTitleMsg = 'ERROR';
+        }
+        var myPopup3 = $ionicPopup.show({
+          template: bodyMsg,
+          title: titleMsg,
+          subTitle: subTitleMsg,
+          scope: $scope,
+          buttons: [
+            {text: 'Aceptar'}
+          ]
+        });
+        $ionicLoading.hide();
+      });
+    });
+
+  }
 
 })

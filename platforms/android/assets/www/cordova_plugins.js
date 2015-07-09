@@ -13,13 +13,21 @@ module.exports = [
         "clobbers": [
             "window.plugins.socialsharing"
         ]
+    },
+    {
+        "file": "plugins/com.paypal.cordova.mobilesdk/www/cdv-plugin-paypal-mobile-sdk.js",
+        "id": "com.paypal.cordova.mobilesdk.PayPalMobile",
+        "clobbers": [
+            "PayPalMobile"
+        ]
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
     "com.ionic.keyboard": "1.0.4",
-    "nl.x-services.plugins.socialsharing": "4.3.19-dev"
+    "nl.x-services.plugins.socialsharing": "4.3.19-dev",
+    "com.paypal.cordova.mobilesdk": "3.1.8"
 }
 // BOTTOM OF METADATA
 });

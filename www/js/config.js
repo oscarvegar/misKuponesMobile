@@ -10,6 +10,7 @@ var CONTEXT_PATH_WS = "http://localhost:1337/";
 
 // GENERAL
 var REGISTRO_WS = CONTEXT_PATH_WS + "auth/local/register/";
+var SOLICITUD_CAMBIO_PWD_WS = CONTEXT_PATH_WS + "Auth/solicitarCambioPasswordApp";
 var LOGIN_WS = CONTEXT_PATH_WS + "loginapp/";
 var GET_PROMOS_WS = CONTEXT_PATH_WS + "Promocion/findByLimit/";
 var GET_PROMOS_ESTADO_WS = CONTEXT_PATH_WS + "Promocion/findByEstado/";
@@ -35,4 +36,33 @@ var DOC_ESTADOS = "estados";
 // Nombres para el LocalStorage
 
 var LOCAL_ESTADO_SELECTED = "estadoSelected";
+
+// PAYPAL Settings
+var payPalProductionId = '';  // Integrar el key en produccion
+var payPalSandboxId = 'X3RRQ8YYCTAMN';
+var payPalShopName = "Oscar Garcia's Test Store";
+var payPalMerchantPrivacyPolicyURL = "https://www.paypal.com/ua/webapps/mpp/ua/privacy-full";
+var payPalMerchantUserAgreementURL = "https://www.paypal.com/us/webapps/mpp/ua/useragreement-full";
+var payPalEnv = "PayPalEnvironmentSandbox";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -3,7 +3,7 @@
  */
 var myApp = angular.module("PromoModule",['ionic','ngCordova']);
 myApp.controller( "PromoController",
-    function($timeout,$scope, $http, $rootScope, $kuponServices, $db, $ionicLoading,$cordovaSocialSharing,$ionicPopup, $timeout, $ionicPopover){
+    function($timeout,$scope, $http, $rootScope, $kuponServices, $db, $ionicLoading,$cordovaSocialSharing,$ionicPopup, $timeout, $ionicPopover, PaypalService){
 
     $ionicPopover.fromTemplateUrl('templates/popover.html', {
         scope: $scope,
@@ -40,18 +40,50 @@ myApp.controller( "PromoController",
 
     getCliente();
 
-    $scope.actualizarCliente = function(){
+    $scope.actualizarCliente = function(isValid, form){
+        if(!isValid){
+            var myPopup = $ionicPopup.show({
+                template: '<b><center>Verifica que los datos ingresados sean correctos</center></b>',
+                title: 'Error de datos',
+                subTitle: 'Error al procesar la operación',
+                scope: $scope,
+                buttons: [
+                    { text: 'Aceptar' }
+                ]
+            });
+            angular.forEach(form.$error.required, function(field) {
+                field.$setDirty();
+            });
+            return;
+        }
+        $ionicLoading.show({
+            template: "Actualizando tus datos ..."
+        });
         $rootScope.cliente.estado = $rootScope.estadoSelected;
         $http.post(CLIENTE_UPDATE_WS, $rootScope.cliente)
             .then(function(result){
                 $scope.editar = false ;
-                alert(" Su información ha sido actualizada. " );
+                myPopup = $ionicPopup.show({
+                    template: '<b><center>Su información ha sido actualizada</center></b>',
+                    title: 'Confirmación de operación',
+                    scope: $scope,
+                    buttons: [
+                        { text: 'Aceptar' }
+                    ]
+                });
+                $timeout(function() {
+                    myPopup.close(); //close the popup after 3 seconds for some reason
+                }, 3000);
+                $scope.onCambiarPwd = false;
+                $scope.editar = false ;
+                $ionicLoading.hide();
                 if(!$scope.$$phase) {
                     $scope.$apply();
                 }
             })
             .catch(function(err){
                 alert("Error al actualizar el cliente: " + JSON.stringify(err) );
+                $ionicLoading.hide();
             });
     }
 
@@ -147,8 +179,9 @@ myApp.controller( "PromoController",
 
     $scope.comprar = function() {
         $rootScope.disponibles = [];
-        if($scope.promoSelected.cantidadKupones <= 10) {
-            for (var i = 0; i < $scope.promoSelected.cantidadKupones; i++) {
+        $scope.cantidadDisponible = $scope.promoSelected.cantidadKupones - $scope.promoSelected.cantidadCreados;
+        if($scope.cantidadDisponible <= 10) {
+            for (var i = 0; i < $scope.cantidadDisponible; i++) {
                 $rootScope.disponibles.push(i + 1);
             }
         }else{
@@ -161,6 +194,21 @@ myApp.controller( "PromoController",
     $scope.aplicaCantidad = function(cantidad){
     $rootScope.cantidad = cantidad;
     //alert("cantidad a aplicar :: ", $rootScope.cantidad );
+    }
+
+    $scope.procederCompra = function() {
+        $rootScope.productsCart = [];
+        var prodInCart = {  title: 'product name',
+            description: 'product description',
+            quantity: 1,
+            price: 230,
+            images: null,
+            id: 1};
+        $rootScope.productsCart.push( prodInCart );
+        //window.location.href = "#/app/checkout";
+        PaypalService.initPaymentUI().then(function () {
+            PaypalService.makePayment(300, 'Kupon de Prueba');
+        });
     }
 
     $scope.confirmarCompra = function() {

@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.business', 'PromoModule', 'MisKuponesModule'])
+angular.module('starter', ['ionic', 'validation.match', 'starter.controllers', 'kupon.dao', 'kupon.business', 'kupon.paypalService', 'PromoModule', 'MisKuponesModule'])
 
 .run(function($ionicPlatform, $kuponServices, $db, $rootScope) {
   $ionicPlatform.ready(function() {
@@ -26,8 +26,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
   },function(error){
     alert("Error al cargar promociones: " + JSON.stringify(error) );
   });
-      
 
+  // Obtener categorias
+  $kuponServices.getCategorias().then(function(result){
+    console.log("RESULT DE CATEGORIAS :::: ", result);
+    localStorage["categoData"] = JSON.stringify(result);
+  });
 
 })
 
@@ -86,12 +90,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
     }
   })
 
-
   .state('app.kuponDetalle', {
     url: "/kuponDetalle",
     views: {
       'menuContent': {
         templateUrl: "templates/kuponDetalle.html"
+      }
+    }
+  })
+
+  .state('app.checkout', {
+    url: "/checkout",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/checkout.html"
       }
     }
   });
@@ -101,6 +113,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'kupon.dao', 'kupon.b
 
 })
 .controller("AppController", function($scope, $http){
+
   $scope.salir = function(){
     ionic.Platform.exitApp();
   }
