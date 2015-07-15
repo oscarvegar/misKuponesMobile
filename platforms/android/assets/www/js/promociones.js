@@ -179,8 +179,9 @@ myApp.controller( "PromoController",
 
     $scope.comprar = function() {
         $rootScope.disponibles = [];
-        if($scope.promoSelected.cantidadKupones <= 10) {
-            for (var i = 0; i < $scope.promoSelected.cantidadKupones; i++) {
+        $scope.cantidadDisponible = $scope.promoSelected.cantidadKupones - $scope.promoSelected.cantidadCreados;
+        if($scope.cantidadDisponible <= 10) {
+            for (var i = 0; i < $scope.cantidadDisponible; i++) {
                 $rootScope.disponibles.push(i + 1);
             }
         }else{
@@ -198,15 +199,32 @@ myApp.controller( "PromoController",
     $scope.procederCompra = function() {
         $rootScope.productsCart = [];
         var prodInCart = {  title: 'product name',
-            description: 'product description',
-            quantity: 1,
-            price: 230,
-            images: null,
-            id: 1};
+                            description: 'product description',
+                            quantity: 1,
+                            price: 230,
+                            images: null,
+                            id: 1   };
         $rootScope.productsCart.push( prodInCart );
         //window.location.href = "#/app/checkout";
         PaypalService.initPaymentUI().then(function () {
-            PaypalService.makePayment(300, 'Kupon de Prueba');
+            PaypalService.makePayment($rootScope.promoSelected.precioKupon *  $rootScope.cantidad,
+                $rootScope.promoSelected.titulo).then(function(result){
+                if( result.client.environment === "sandbox" ) {
+                    // Pago de prueba
+                    if (result.response.state === "approved"){
+                        $scope.confirmarCompra();
+                    }else{
+                        alert("Error en pago a paypal: " + JSON.stringify(result));
+                    }
+                } else {
+                    if ( result.response.state === "approved" ){
+                        alert("Respuesta de pago a paypal: " + JSON.stringify(result));
+                        $scope.confirmarCompra();
+                    }else{
+                        alert("Error en pago a paypal: " + JSON.stringify(result));
+                    }
+                }
+            });
         });
     }
 
@@ -214,9 +232,8 @@ myApp.controller( "PromoController",
         //alert("cantidad a comprar :: ", $rootScope.cantidad );
 
         $ionicLoading.show({
-          template: "Procesando tu compra ..."
+          template: "finalizando tu compra ..."
         });
-        console.log("Promocion seleccionada :: ", $rootScope.promoSelected )
         var user = JSON.parse(localStorage["user"]);
         var estadoId = localStorage[ LOCAL_ESTADO_SELECTED ];
         console.log("user logged : ", user);

@@ -60,8 +60,7 @@
       <table width="100%" >
         <tr>
           <td ng-if="promoSelected.finVigencia">
-            <span class="tenue">Kupon Válido hasta {{promoSelected.finVigencia | date:"MM/dd/yyyy"}} </span><br/>
-            Faltan {{vigenciaDias}} dias.
+            <span class="tenue">Kupon Válido hasta {{promoSelected.finVigencia | date:"MM/dd/yyyy"}} </span>
           </td>
           <td ng-if="!promoSelected.finVigencia">
             <span>

@@ -61,7 +61,7 @@ angular.module('kupon.paypalService', [])
      * @returns {object} PayPalPaymentObject
      */
     function createPayment(total, name) {
-        var payment = new PayPalPayment("" + total, "EUR", "" + name);
+        var payment = new PayPalPayment("" + total, "MXN", "" + name);
         return payment;
     }
     /**
